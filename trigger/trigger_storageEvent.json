@@ -1,0 +1,18 @@
+{
+	"name": "trigger_storageEvent",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/devcontainer/blobs/orders/",
+			"blobPathEndsWith": "csv",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/823f5911-115e-4f94-a160-8761f6d8fdbe/resourceGroups/dev_rg/providers/Microsoft.Storage/storageAccounts/devstorage123321",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
