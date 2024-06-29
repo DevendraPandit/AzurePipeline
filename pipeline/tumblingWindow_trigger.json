@@ -1,0 +1,65 @@
+{
+	"name": "tumblingWindow_trigger",
+	"properties": {
+		"activities": [
+			{
+				"name": "windowStartTime",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "star_time",
+					"value": {
+						"value": "@pipeline().parameters.w_start_time",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "windowEndTime",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "windowStartTime",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "end_time",
+					"value": {
+						"value": "@pipeline().parameters.w_end_time",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"w_start_time": {
+				"type": "string"
+			},
+			"w_end_time": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"star_time": {
+				"type": "String"
+			},
+			"end_time": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
