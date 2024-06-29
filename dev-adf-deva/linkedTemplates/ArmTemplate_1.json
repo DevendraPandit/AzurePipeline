@@ -25,6 +25,27 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/DS_outbound')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_gen2lake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "outbound",
+						"fileSystem": "devcontainer"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DS_outbound_P')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -543,7 +564,9 @@
 				"annotations": [],
 				"lastPublishTime": "2024-05-29T07:37:56Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_outbound')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Switch_Activity_parameterized_sink_diff_file_extns_copy1')]",
@@ -1349,7 +1372,9 @@
 				"annotations": [],
 				"lastPublishTime": "2024-05-29T10:32:56Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_outbound')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/filter_activity_orders_files')]",
@@ -1516,7 +1541,9 @@
 				"annotations": [],
 				"lastPublishTime": "2024-05-29T10:40:49Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_outbound')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/getMetadata_ForEach_parallel')]",
@@ -1636,7 +1663,8 @@
 				"lastPublishTime": "2024-05-29T09:45:01Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DS_srcfiles_qm')]"
+				"[concat(variables('factoryId'), '/datasets/DS_srcfiles_qm')]",
+				"[concat(variables('factoryId'), '/datasets/DS_outbound')]"
 			]
 		},
 		{
@@ -1786,7 +1814,8 @@
 				"lastPublishTime": "2024-05-29T09:38:58Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DS_srcfiles_qm')]"
+				"[concat(variables('factoryId'), '/datasets/DS_srcfiles_qm')]",
+				"[concat(variables('factoryId'), '/datasets/DS_outbound')]"
 			]
 		},
 		{
@@ -2234,130 +2263,9 @@
 				"annotations": [],
 				"lastPublishTime": "2024-05-29T07:18:40Z"
 			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/untilActivity')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Get Metadata1",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "DS_inbound_until",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"fieldList": [
-								"exists"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "BinaryReadSettings"
-							}
-						}
-					},
-					{
-						"name": "If Condition1",
-						"type": "IfCondition",
-						"dependsOn": [
-							{
-								"activity": "Get Metadata1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"expression": {
-								"value": "@activity('Get Metadata1').output.exists",
-								"type": "Expression"
-							},
-							"ifFalseActivities": [
-								{
-									"name": "Wait1",
-									"type": "Wait",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"waitTimeInSeconds": 30
-									}
-								}
-							],
-							"ifTrueActivities": [
-								{
-									"name": "Copy data1",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "BinarySource",
-											"storeSettings": {
-												"type": "AzureBlobFSReadSettings",
-												"recursive": true
-											},
-											"formatSettings": {
-												"type": "BinaryReadSettings"
-											}
-										},
-										"sink": {
-											"type": "BinarySink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											}
-										},
-										"enableStaging": false
-									},
-									"inputs": [
-										{
-											"referenceName": "DS_inbound_until",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "DS_outbound",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_outbound')]"
+			]
 		}
 	]
 }
