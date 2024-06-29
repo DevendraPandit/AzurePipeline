@@ -51,6 +51,10 @@
 			"type": "string",
 			"defaultValue": "https://devkeyvault1221.vault.azure.net/"
 		},
+		"trigger_storageEvent_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/823f5911-115e-4f94-a160-8761f6d8fdbe/resourceGroups/dev_rg/providers/Microsoft.Storage/storageAccounts/devstorage123321"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -148,6 +152,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"trigger_storageEvent_properties_typeProperties_scope": {
+						"value": "[parameters('trigger_storageEvent_properties_typeProperties_scope')]"
 					}
 				}
 			},
