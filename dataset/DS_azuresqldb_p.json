@@ -1,0 +1,24 @@
+{
+	"name": "DS_azuresqldb_p",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_azuresqldb",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tgt_tbl": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": {
+				"value": "@dataset().tgt_tbl",
+				"type": "Expression"
+			}
+		}
+	}
+}
