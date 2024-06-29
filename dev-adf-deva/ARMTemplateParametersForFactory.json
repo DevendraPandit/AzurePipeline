@@ -38,8 +38,11 @@
 		"LS_keyvault_aaaprac_properties_typeProperties_baseUrl": {
 			"value": "https://devkeyvault1221.vault.azure.net/"
 		},
-		"trigger_storageEvent_properties_typeProperties_scope": {
-			"value": "/subscriptions/823f5911-115e-4f94-a160-8761f6d8fdbe/resourceGroups/dev_rg/providers/Microsoft.Storage/storageAccounts/devstorage123321"
+		"trigger_tumblingWindow_properties_pipeline_parameters_w_start_time": {
+			"value": "@{trigger().outputs.windowStarTime}"
+		},
+		"trigger_tumblingWindow_properties_pipeline_parameters_w_end_time": {
+			"value": "@{trigger().outputs.windowEndTime}"
 		}
 	}
 }

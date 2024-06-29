@@ -51,9 +51,13 @@
 			"type": "string",
 			"defaultValue": "https://devkeyvault1221.vault.azure.net/"
 		},
-		"trigger_storageEvent_properties_typeProperties_scope": {
+		"trigger_tumblingWindow_properties_pipeline_parameters_w_start_time": {
 			"type": "string",
-			"defaultValue": "/subscriptions/823f5911-115e-4f94-a160-8761f6d8fdbe/resourceGroups/dev_rg/providers/Microsoft.Storage/storageAccounts/devstorage123321"
+			"defaultValue": "@{trigger().outputs.windowStarTime}"
+		},
+		"trigger_tumblingWindow_properties_pipeline_parameters_w_end_time": {
+			"type": "string",
+			"defaultValue": "@{trigger().outputs.windowEndTime}"
 		}
 	},
 	"variables": {
@@ -3947,37 +3951,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/trigger_storageEvent')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "storage_event_trigger",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "BlobEventsTrigger",
-				"typeProperties": {
-					"blobPathBeginsWith": "/devcontainer/blobs/orders/",
-					"blobPathEndsWith": "csv",
-					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('trigger_storageEvent_properties_typeProperties_scope')]",
-					"events": [
-						"Microsoft.Storage.BlobCreated"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/storage_event_trigger')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/DS_orders')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -4042,6 +4015,112 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_azuresqldb')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/tumblingWindow_trigger')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "windowStartTime",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "star_time",
+							"value": {
+								"value": "@pipeline().parameters.w_start_time",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "windowEndTime",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "windowStartTime",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "end_time",
+							"value": {
+								"value": "@pipeline().parameters.w_end_time",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"w_start_time": {
+						"type": "string"
+					},
+					"w_end_time": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"star_time": {
+						"type": "String"
+					},
+					"end_time": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/trigger_tumblingWindow')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "tumblingWindow_trigger",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"w_start_time": "[parameters('trigger_tumblingWindow_properties_pipeline_parameters_w_start_time')]",
+						"w_end_time": "[parameters('trigger_tumblingWindow_properties_pipeline_parameters_w_end_time')]"
+					}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Hour",
+					"interval": 24,
+					"startTime": "2024-02-01T10:00:00Z",
+					"endTime": "2024-02-04T10:00:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 50,
+					"retryPolicy": {
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/tumblingWindow_trigger')]"
 			]
 		}
 	]

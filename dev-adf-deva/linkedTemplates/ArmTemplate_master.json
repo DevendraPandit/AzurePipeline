@@ -51,9 +51,13 @@
 			"type": "string",
 			"defaultValue": "https://devkeyvault1221.vault.azure.net/"
 		},
-		"trigger_storageEvent_properties_typeProperties_scope": {
+		"trigger_tumblingWindow_properties_pipeline_parameters_w_start_time": {
 			"type": "string",
-			"defaultValue": "/subscriptions/823f5911-115e-4f94-a160-8761f6d8fdbe/resourceGroups/dev_rg/providers/Microsoft.Storage/storageAccounts/devstorage123321"
+			"defaultValue": "@{trigger().outputs.windowStarTime}"
+		},
+		"trigger_tumblingWindow_properties_pipeline_parameters_w_end_time": {
+			"type": "string",
+			"defaultValue": "@{trigger().outputs.windowEndTime}"
 		},
 		"containerUri": {
 			"type": "string",
@@ -132,6 +136,12 @@
 					},
 					"LS_azuredb_keyvault_aaaprac_properties_typeProperties_userName": {
 						"value": "[parameters('LS_azuredb_keyvault_aaaprac_properties_typeProperties_userName')]"
+					},
+					"trigger_tumblingWindow_properties_pipeline_parameters_w_start_time": {
+						"value": "[parameters('trigger_tumblingWindow_properties_pipeline_parameters_w_start_time')]"
+					},
+					"trigger_tumblingWindow_properties_pipeline_parameters_w_end_time": {
+						"value": "[parameters('trigger_tumblingWindow_properties_pipeline_parameters_w_end_time')]"
 					}
 				}
 			},
@@ -152,9 +162,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"trigger_storageEvent_properties_typeProperties_scope": {
-						"value": "[parameters('trigger_storageEvent_properties_typeProperties_scope')]"
 					}
 				}
 			},
