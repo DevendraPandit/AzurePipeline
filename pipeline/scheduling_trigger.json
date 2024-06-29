@@ -1,0 +1,28 @@
+{
+	"name": "scheduling_trigger",
+	"properties": {
+		"description": "To run this pipeline everyday at 10 a.m.",
+		"activities": [
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "msg",
+					"value": "This is scheduling trigger poc"
+				}
+			}
+		],
+		"variables": {
+			"msg": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
