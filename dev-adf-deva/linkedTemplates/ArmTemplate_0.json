@@ -179,6 +179,84 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/child_pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Set variable1",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "message",
+							"value": {
+								"value": "@concat('person name is ',pipeline().parameters.prsn_name,' and person location is ',pipeline().parameters.prsn_location)",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"prsn_name": {
+						"type": "string"
+					},
+					"prsn_location": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"message": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/scheduling_trigger')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "To run this pipeline everyday at 10 a.m.",
+				"activities": [
+					{
+						"name": "Set variable1",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "msg",
+							"value": "This is scheduling trigger poc"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"msg": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/LS_azuresqldb')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -244,25 +322,28 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/child_pipeline')]",
+			"name": "[concat(parameters('factoryName'), '/execute_pipeline_activity')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Set variable1",
-						"type": "SetVariable",
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
 						"dependsOn": [],
 						"policy": {
-							"secureOutput": false,
 							"secureInput": false
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"variableName": "message",
-							"value": {
-								"value": "@concat('person name is ',pipeline().parameters.prsn_name,' and person location is ',pipeline().parameters.prsn_location)",
-								"type": "Expression"
+							"pipeline": {
+								"referenceName": "child_pipeline",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"prsn_name": "Virat",
+								"prsn_location": "Mumbai"
 							}
 						}
 					}
@@ -270,22 +351,11 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
-				"parameters": {
-					"prsn_name": {
-						"type": "string"
-					},
-					"prsn_location": {
-						"type": "string"
-					}
-				},
-				"variables": {
-					"message": {
-						"type": "String"
-					}
-				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/child_pipeline')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/script_activity')]",
@@ -660,84 +730,6 @@
 					},
 					{
 						"name": "dept_name",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_gen2lake')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_inbound_i')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_gen2lake",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"filename": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().filename",
-							"type": "Expression"
-						},
-						"folderPath": "inbound/ifCondition",
-						"fileSystem": "devcontainer"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_gen2lake')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_inbound_lkup')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_gen2lake",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"srcfile": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().srcfile",
-							"type": "Expression"
-						},
-						"folderPath": "inbound",
-						"fileSystem": "devcontainer"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "cust_id",
-						"type": "String"
-					},
-					{
-						"name": "cust_name",
 						"type": "String"
 					}
 				]
