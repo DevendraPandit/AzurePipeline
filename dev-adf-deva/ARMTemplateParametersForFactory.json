@@ -1,0 +1,42 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "dev-adf-deva"
+		},
+		"LS_azuresqldb_connectionString": {
+			"value": ""
+		},
+		"LS_azuresqldb_aaaprac_password": {
+			"value": ""
+		},
+		"LS_gen2lake_accountKey": {
+			"value": ""
+		},
+		"LS_azuredb_keyvault_aaaprac_properties_typeProperties_server": {
+			"value": "devsqlserver12.database.windows.net"
+		},
+		"LS_azuredb_keyvault_aaaprac_properties_typeProperties_database": {
+			"value": "devsqldb"
+		},
+		"LS_azuredb_keyvault_aaaprac_properties_typeProperties_userName": {
+			"value": "devendra"
+		},
+		"LS_azuresqldb_aaaprac_properties_typeProperties_server": {
+			"value": "devsqlserver12.database.windows.net"
+		},
+		"LS_azuresqldb_aaaprac_properties_typeProperties_database": {
+			"value": "devsqldb"
+		},
+		"LS_azuresqldb_aaaprac_properties_typeProperties_userName": {
+			"value": "devendra"
+		},
+		"LS_gen2lake_properties_typeProperties_url": {
+			"value": "https://devstorage123321.dfs.core.windows.net/"
+		},
+		"LS_keyvault_aaaprac_properties_typeProperties_baseUrl": {
+			"value": "https://devkeyvault1221.vault.azure.net/"
+		}
+	}
+}
