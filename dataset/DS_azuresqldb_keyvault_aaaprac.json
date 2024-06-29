@@ -1,0 +1,25 @@
+{
+	"name": "DS_azuresqldb_keyvault_aaaprac",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_azuredb_keyvault_aaaprac",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "deptid",
+				"type": "varchar"
+			},
+			{
+				"name": "deptname",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"table": "dept_tbl2"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

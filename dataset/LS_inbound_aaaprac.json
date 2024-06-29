@@ -1,0 +1,19 @@
+{
+	"name": "LS_inbound_aaaprac",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_gen2lake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "inbound",
+				"fileSystem": "devcontainer"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

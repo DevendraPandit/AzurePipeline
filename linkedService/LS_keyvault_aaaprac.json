@@ -1,0 +1,11 @@
+{
+	"name": "LS_keyvault_aaaprac",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://devkeyvault1221.vault.azure.net/"
+		}
+	}
+}

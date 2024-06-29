@@ -1,0 +1,27 @@
+{
+	"name": "DS_outbound_P",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_gen2lake",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tgtfoldername": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@concat('outbound/',dataset().tgtfoldername)",
+					"type": "Expression"
+				},
+				"fileSystem": "devcontainer"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

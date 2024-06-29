@@ -1,0 +1,24 @@
+{
+	"name": "LS_azuredb_keyvault_aaaprac",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "devsqlserver12.database.windows.net",
+			"database": "devsqldb",
+			"encrypt": "mandatory",
+			"trustServerCertificate": false,
+			"authenticationType": "SQL",
+			"userName": "devendra",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "LS_keyvault_aaaprac",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "sqlpwd"
+			}
+		}
+	}
+}

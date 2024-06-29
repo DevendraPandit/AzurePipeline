@@ -1,0 +1,89 @@
+{
+	"name": "wildcard_all_todayDateFiles",
+	"properties": {
+		"activities": [
+			{
+				"name": "all_today_files_transfer_from_folder",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "getDate",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "inbound",
+							"wildcardFileName": {
+								"value": "@concat('*',variables('fileDate'),'*')",
+								"type": "Expression"
+							},
+							"deleteFilesAfterCompletion": false
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_inbound",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_outbound",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "getDate",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "fileDate",
+					"value": {
+						"value": "@formatDateTime(utcnow(),'ddMMyyyy')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"fileDate": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-05-29T06:31:14Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
