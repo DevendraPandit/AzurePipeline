@@ -1,0 +1,19 @@
+{
+	"name": "DS_inbound_until",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_gen2lake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "orders.txt",
+				"folderPath": "srcfile",
+				"fileSystem": "devcontainer"
+			}
+		}
+	}
+}
