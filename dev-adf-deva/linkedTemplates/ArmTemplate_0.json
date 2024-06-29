@@ -196,6 +196,30 @@
 								}
 							]
 						}
+					},
+					{
+						"name": "Set variable3",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ForEach1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "msg",
+							"value": {
+								"value": "@concat('persons names are',variables('names_lst'))",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"policy": {
@@ -210,6 +234,9 @@
 					},
 					"names_lst": {
 						"type": "Array"
+					},
+					"msg": {
+						"type": "String"
 					}
 				},
 				"annotations": []
